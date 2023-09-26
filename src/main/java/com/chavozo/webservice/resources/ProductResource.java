@@ -7,19 +7,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.chavozo.webservice.domain.Category;
-import com.chavozo.webservice.service.CategoryService;
+import com.chavozo.webservice.domain.Product;
+import com.chavozo.webservice.service.ProductService;
 
 @RestController
-@RequestMapping(value = "/categories")
-public class CategoryResource {
-
+@RequestMapping(value = "/products")
+public class ProductResource {
     @Autowired
-    private CategoryService service;
+    private ProductService service;
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> find(@PathVariable Integer id) {
-        Category category = service.find(id);
-        return ResponseEntity.ok().body(category);
+        Product product = service.find(id);
+        return ResponseEntity.ok().body(product);
     }
 }
