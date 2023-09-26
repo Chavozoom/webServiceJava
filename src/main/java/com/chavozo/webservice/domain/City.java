@@ -1,20 +1,16 @@
 package com.chavozo.webservice.domain;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
-import java.util.List;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
-public class Category implements Serializable {
+public class City implements Serializable {
 
     private static final long serialVersion = 1L;
 
@@ -23,17 +19,17 @@ public class Category implements Serializable {
     private Integer id;
     private String name;
 
-    @JsonManagedReference
-    @ManyToMany(mappedBy = "categories")
-    private List<Product> products = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "state_id")
+    private State state;
 
-    public Category() {
-    }
-
-    public Category(Integer id, String name) {
-        super();
+    public City(Integer id, String name, State state) {
         this.id = id;
         this.name = name;
+        this.state = state;
+    }
+
+    public City() {
     }
 
     public Integer getId() {
@@ -44,8 +40,8 @@ public class Category implements Serializable {
         return name;
     }
 
-    public List<Product> getProducts() {
-        return products;
+    public State getState() {
+        return state;
     }
 
     public void setId(Integer id) {
@@ -56,8 +52,8 @@ public class Category implements Serializable {
         this.name = name;
     }
 
-    public void setProducts(List<Product> products) {
-        this.products = products;
+    public void setState(State state) {
+        this.state = state;
     }
 
     @Override
@@ -79,7 +75,7 @@ public class Category implements Serializable {
         if (getClass() != obj.getClass())
             return false;
 
-        Category other = (Category) obj;
+        City other = (City) obj;
         if (id == null) {
             if (other.id != null)
                 return false;
