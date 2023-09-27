@@ -16,6 +16,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(name = "orders")
 public class Order implements Serializable {
@@ -27,9 +29,11 @@ public class Order implements Serializable {
     private Integer id;
     private Date instant;
 
+    @JsonManagedReference
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "order")
     private Payment payment;
 
+    @JsonManagedReference
     @ManyToOne
     private Client client;
 
