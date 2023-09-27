@@ -13,6 +13,7 @@ import com.chavozo.webservice.domain.Category;
 import com.chavozo.webservice.domain.City;
 import com.chavozo.webservice.domain.Client;
 import com.chavozo.webservice.domain.Order;
+import com.chavozo.webservice.domain.OrderItem;
 import com.chavozo.webservice.domain.Payment;
 import com.chavozo.webservice.domain.PaymentsWithBankSlip;
 import com.chavozo.webservice.domain.PaymentsWithCard;
@@ -24,6 +25,7 @@ import com.chavozo.webservice.repositories.AddressRepository;
 import com.chavozo.webservice.repositories.CategoryRepository;
 import com.chavozo.webservice.repositories.CityRepository;
 import com.chavozo.webservice.repositories.ClientRepository;
+import com.chavozo.webservice.repositories.OrderItemRepository;
 import com.chavozo.webservice.repositories.OrderRepository;
 import com.chavozo.webservice.repositories.PaymentRepository;
 import com.chavozo.webservice.repositories.ProductRepository;
@@ -55,6 +57,9 @@ public class WebserviceApplication implements CommandLineRunner {
 
 	@Autowired
 	private OrderRepository orderRepository;
+
+	@Autowired
+	private OrderItemRepository orderItemRepository;
 
 	@Override
 	public void run(String[] args) throws Exception {
@@ -114,6 +119,19 @@ public class WebserviceApplication implements CommandLineRunner {
 
 		paymentRepository.saveAll(Arrays.asList(payment1, payment2));
 		orderRepository.saveAll(Arrays.asList(order1, order2));
+
+		OrderItem orderItem1 = new OrderItem(order1, prod3, 2, 160.00, 0.0);
+		OrderItem orderItem2 = new OrderItem(order2, prod2, 2, 240.00, 20.0);
+		OrderItem orderItem3 = new OrderItem(order2, prod1, 2, 2040.00, 20.0);
+
+		order1.getItens().addAll(Arrays.asList(orderItem1));
+		order2.getItens().addAll(Arrays.asList(orderItem2, orderItem3));
+
+		prod1.getItens().addAll(Arrays.asList(orderItem3));
+		prod2.getItens().addAll(Arrays.asList(orderItem2));
+		prod3.getItens().addAll(Arrays.asList(orderItem1));
+
+		orderItemRepository.saveAll(Arrays.asList(orderItem1, orderItem2, orderItem3));
 
 	}
 
