@@ -1,5 +1,6 @@
 package com.chavozo.webservice;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,13 +12,20 @@ import com.chavozo.webservice.domain.Address;
 import com.chavozo.webservice.domain.Category;
 import com.chavozo.webservice.domain.City;
 import com.chavozo.webservice.domain.Client;
+import com.chavozo.webservice.domain.Order;
+import com.chavozo.webservice.domain.Payment;
+import com.chavozo.webservice.domain.PaymentsWithBankSlip;
+import com.chavozo.webservice.domain.PaymentsWithCard;
 import com.chavozo.webservice.domain.Product;
 import com.chavozo.webservice.domain.State;
 import com.chavozo.webservice.domain.enums.ClientType;
+import com.chavozo.webservice.domain.enums.PaymentState;
 import com.chavozo.webservice.repositories.AddressRepository;
 import com.chavozo.webservice.repositories.CategoryRepository;
 import com.chavozo.webservice.repositories.CityRepository;
 import com.chavozo.webservice.repositories.ClientRepository;
+import com.chavozo.webservice.repositories.OrderRepository;
+import com.chavozo.webservice.repositories.PaymentRepository;
 import com.chavozo.webservice.repositories.ProductRepository;
 import com.chavozo.webservice.repositories.StateRepository;
 
@@ -41,6 +49,12 @@ public class WebserviceApplication implements CommandLineRunner {
 
 	@Autowired
 	private AddressRepository addressRepository;
+
+	@Autowired
+	private PaymentRepository paymentRepository;
+
+	@Autowired
+	private OrderRepository orderRepository;
 
 	@Override
 	public void run(String[] args) throws Exception {
@@ -84,6 +98,22 @@ public class WebserviceApplication implements CommandLineRunner {
 
 		clientRepository.saveAll(Arrays.asList(client1));
 		addressRepository.saveAll(Arrays.asList(address1, address2));
+
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+
+		Order order1 = new Order(null, sdf.parse("30/09/2023 10:30"), client1, address1);
+		Order order2 = new Order(null, sdf.parse("25/09/2020 10:30"), client1, address2);
+
+		Payment payment1 = new PaymentsWithCard(null, PaymentState.COMPLETED, order1, 6);
+		order1.setPayment(payment1);
+
+		Payment payment2 = new PaymentsWithBankSlip(null, PaymentState.PENDENT, order2, sdf.parse("25/10/2020 10:30"),
+				null);
+
+		client1.getOrders().addAll(Arrays.asList(order1, order2));
+
+		paymentRepository.saveAll(Arrays.asList(payment1, payment2));
+		orderRepository.saveAll(Arrays.asList(order1, order2));
 
 	}
 
