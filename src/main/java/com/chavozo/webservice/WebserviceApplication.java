@@ -7,12 +7,17 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import com.chavozo.webservice.domain.Address;
 import com.chavozo.webservice.domain.Category;
 import com.chavozo.webservice.domain.City;
+import com.chavozo.webservice.domain.Client;
 import com.chavozo.webservice.domain.Product;
 import com.chavozo.webservice.domain.State;
+import com.chavozo.webservice.domain.enums.ClientType;
+import com.chavozo.webservice.repositories.AddressRepository;
 import com.chavozo.webservice.repositories.CategoryRepository;
 import com.chavozo.webservice.repositories.CityRepository;
+import com.chavozo.webservice.repositories.ClientRepository;
 import com.chavozo.webservice.repositories.ProductRepository;
 import com.chavozo.webservice.repositories.StateRepository;
 
@@ -30,6 +35,12 @@ public class WebserviceApplication implements CommandLineRunner {
 
 	@Autowired
 	private CityRepository cityRepository;
+
+	@Autowired
+	private ClientRepository clientRepository;
+
+	@Autowired
+	private AddressRepository addressRepository;
 
 	@Override
 	public void run(String[] args) throws Exception {
@@ -62,6 +73,18 @@ public class WebserviceApplication implements CommandLineRunner {
 
 		stateRepository.saveAll(Arrays.asList(state1, state2));
 		cityRepository.saveAll(Arrays.asList(city1, city2, city3));
+
+		Client client1 = new Client(null, "John", "john@gmail.com", "123456789", ClientType.INDIVIDUAL);
+		client1.getPhones().addAll(Arrays.asList("1991948282", "19919482822"));
+
+		Address address1 = new Address(null, "12", "baker street", "123456789", client1, "Bronks", city2);
+		Address address2 = new Address(null, "123", "street baker", "987654123", client1, "Bronks 2", city2);
+
+		client1.getAddresses().addAll(Arrays.asList(address1, address2));
+
+		clientRepository.saveAll(Arrays.asList(client1));
+		addressRepository.saveAll(Arrays.asList(address1, address2));
+
 	}
 
 	public static void main(String[] args) {
